@@ -10,48 +10,56 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .hero {
-            background-color: #ffffff;
-            border-bottom: 1px solid #e9ecef;
-            padding: 80px 0;
-        }
-
-        .card {
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            transition: transform;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-        }
+        body { background-color: #f8f9fa; }
+        .hero { background-color: #ffffff; border-bottom: 1px solid #e9ecef; padding: 80px 0; }
+        .card { border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform; }
+        .card:hover { transform: translateY(-4px); }
     </style>
 </head>
 <body>
 
-<ul class="navbar-nav ms-auto">
-    <li class="nav-item">
-        <a class="nav-link" href="/board/list">게시판</a>
-    </li>
-    <c:if test="${empty sessionScope.loginUser}">
-        <li class="nav-item">
-            <a class="nav-link" href="/user/register">회원가입</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/user/login">로그인</a>
-        </li>
-    </c:if>
-    <c:if test="${not empty sessionScope.loginUser}">
-        <li class="nav-item">
-            <span class="nav-link">${sessionScope.loginUser.name}님 환영해요!</span>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/user/logout">로그아웃</a>
-        </li>
-    </c:if>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
 
-</ul>
+        <a class="navbar-brand" href="/">SpringBoard</a>
+
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/board/list">게시판</a>
+                </li>
+
+                <%-- TODO 5 정답 - 제품 목록 링크 추가 --%>
+                <li class="nav-item">
+                    <a class="nav-link" href="/product/list">제품목록</a>
+                </li>
+
+                <c:if test="${empty sessionScope.loginUser}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/register">회원가입</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/login">로그인</a>
+                    </li>
+                </c:if>
+
+                <c:if test="${not empty sessionScope.loginUser}">
+                    <li class="nav-item">
+                        <span class="nav-link">${sessionScope.loginUser.name}님 환영해요!</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/logout">로그아웃</a>
+                    </li>
+                </c:if>
+
+            </ul>
+        </div>
+    </div>
+</nav>
