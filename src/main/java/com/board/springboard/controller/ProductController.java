@@ -1,6 +1,5 @@
 package com.board.springboard.controller;
 
-
 import com.board.springboard.model.dto.Product;
 import com.board.springboard.model.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +17,9 @@ public class ProductController {
 
     private final ProductService productService;
 
-    /**@RequestMapping 이 존재할 경우 아래에 작성한 모든 매핑 앞에는
+    /** @RequestMapping 이 존재할 경우 아래에 작성한 모~든 매핑 앞에는
      * /product 주소가 자동으로 붙는다.
-     * @GetMapping("/list") 작성하더라도 주소창에서는 /product/list 형태로 들어가야지 제품 목록들을 확인할 수 있다
+     * @GetMapping("/list") 작성하더라도 주소창에서는 /product/list 형태로 들어가야지 제품 목록들을 확인할 수 있다.
      *
      * @param model jsp 로 sql에서 가져온 데이터를 전달해주기위한 운반 수단
      * @return 클라이언트가 /product/list 주소로 접속했을 경우 보여질 jsp 파일 선택하여 보여주겠다.
@@ -28,15 +27,15 @@ public class ProductController {
     @GetMapping("/list")
     public String 제품목록(Model model) {
         List<Product> productsData = productService.전체제품목록();
-        //                               ""jsp에서 가용할 변수이름  products sql에서 가져온 데이터
+        //                            ""jsp에서 사용할 변수이름    products sql에서 가져온 데이터
         model.addAttribute("products", productsData);
-        return "product/list"; // webapp/WEB-INF/views/product/list.jsp
+        return "product/product_list"; // webapp/WEB-INF/views/product/product_list.jsp
     }
 
     /**
      * GET /product/add 주소로 클라이언트가 접속하게 되면
-     *
-     * @return webapp/WEB-INF/views/product/addForm.jsp 페이지를 반환처리 한다
+     * 제품추가이기 때문에 SQL에서 가져올 데이터가 없으므로 Model model 사용하지 않는다.
+     * @return webapp/WEB-INF/views/product/addForm.jsp 페이지를 반환처리 한다.
      */
     @GetMapping("/add")
     public String 제품추가폼() {
@@ -49,20 +48,21 @@ public class ProductController {
                          RedirectAttributes redirectAttributes) {
         productService.제품추가(product);
         redirectAttributes.addFlashAttribute("msg", "제품이 등록되었습니다.");
+        //return "redirect:/제품 추가 후 돌려보낼 jsp 파일 작성";
         return "redirect:/product/list";
     }
 
     // TODO 9. GET /product/edit?id=1 → 단건 조회 후 editForm.jsp 반환
     // 조건 : @RequestParam 으로 id 받기
-    @GetMapping("/edit")/* 주소에서 ? 로 시작하는 경로는 Mapping 내에 작성하지 않는다 */
+    @GetMapping("/edit") /* 주소에서 ? 로 시작하는 경로는 Mapping 내에 작성하지 않는다. */
     public String 제품수정폼(@RequestParam int id, Model model) {
-        Product productData = productService.제품단건(id);// 수정할 제품 데이터 하나 가져오기
-        model.addAttribute("product", productData);// 수정할 제품 데이터 를 SQl에서 가져온 후 JSP로 전달하기
+        Product productData = productService.제품단건(id); // 수정할 제품 데이터 하나 가져오기
+        model.addAttribute("product", productData); // 수정할 제품 데이터를 SQL에서 가져온 후 JSP 전달하기
         return "product/editForm";
     }
 
     // TODO 10. POST /product/edit → 제품 수정 처리 후 redirect
-    @PostMapping("/edit") // Post / Put / Patch 차이점을 인지하고 사용하자 제품 수정하는데 문제는 없다
+    @PostMapping("/edit")  // Post / Put / Patch 차이점을 인지하고 사용하자 제품 수정하는데 문제는 없다.
     public String 제품수정처리(@ModelAttribute Product product,
                          RedirectAttributes redirectAttributes) {
         // PostMapping 의 경우 제품을 수정한다음 전달
@@ -72,23 +72,25 @@ public class ProductController {
     }
 
     // TODO 11. GET /product/delete?id=1 → 삭제 처리 후 redirect
-    @GetMapping("/delete")
+    @GetMapping("/delete") // ? 이후는 Mapping 에서 작성하지 않는다.
     public String 제품삭제처리(@RequestParam int id,
                          RedirectAttributes redirectAttributes) {
         productService.제품삭제(id);
         redirectAttributes.addFlashAttribute("msg", "제품이 삭제되었습니다.");
         // 제품 리스트로 돌아가서 제품이 삭제되었다는 메세지를 잠깐 보기위해 redirectAttributes 로 가져온다.
-        return "redirect/product/list";
+        return "redirect:/product/list";
     }
 }
+
+
 
 /*
 
 redirectAttributes.addFlashAttribute("msg", "제품이 등록되었습니다.");
-- > 추가 수정 삭제 후 리스트나 특정 페이지로 돌아갈 때
+-> 추가 수정 삭제 후 리스트나 특정 페이지로 돌아갈 때
 페이지와 연관은 없지만, 어떠한 작업을 하다 특정 페이지로 돌아갔는지
-고객에게 메세지로 전달하기 위해여 설정하는 메세지 작업
+고객에게 메세지로 전달하기 위하여 설정하는 메세지 작업
 
-model.addAttribute("product", productData);
+model.addAttribute("products", productsData);
 -> JSP 파일에서 지속적으로 유지되어야 하는 데이터들 전달
  */

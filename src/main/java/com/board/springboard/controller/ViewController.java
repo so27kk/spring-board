@@ -58,7 +58,7 @@ public class ViewController {
     /**
      * 게시물 목록 조회 및 페이지 이동
      * @param model 게시물 리스트 데이터를 전달하기 위한 객체
-     * @return      /board/list.jsp
+     * @return      /board/product_list.jsp
      */
     @GetMapping("/board/list")
     public String listView(Model model){

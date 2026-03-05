@@ -17,7 +17,7 @@
 
     <insert id="제품추가" parameterType="com.board.springboard.model.mapper.ProductMapper">
         INSERT into products (name, price, stock)
-        values (#{naem},#{price},#{stock})
+        values (#{name},#{price},#{stock})
     </insert>
 
     <update id="제품수정" parameterType="com.board.springboard.model.mapper.ProductMapper">
