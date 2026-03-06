@@ -110,6 +110,23 @@ public class UserController {
         }
         return "user/findUser";
     }
+
+    // TODO 4: 빈칸을 채우세요
+    @GetMapping("/user/profile")
+    public String profileView(HttpSession session, Model model) {
+        // 무조건 모든 언어에서는
+        // set 으로 시작하는 기능의 명칭은 저장하다 의미가 담겨있다. (개발자 적 관례)
+        // get 으로 시작하는 기능의 명칭은 저장된 데이터를 가져와서 사용하겠다의미가 담겨있다 (개발자 적 관례)
+        User loginUser = (User) session.getAttribute("loginUser");
+        // 로그인한 유저의 정보가 없는데 악의적으로 URL을 접속해서 유저정보를 조회하려 할 경우
+        if (loginUser == null) return "redirect:/user/login"; // 한줄코드는 중괄호 {} 를 생략할 수 있다.
+
+
+        User freshUser = userService.유저단건조회(loginUser.getId());
+        model.addAttribute("user", freshUser);
+        // 새로고침을 하더라도 user에 데이터를 보존
+        return "user/profile";
+    }
 }
 /*
 // 미완성된 기능

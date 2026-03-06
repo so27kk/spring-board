@@ -35,4 +35,22 @@
         FROM users
         WHERE email = #{email}
     </select>
+
+    <update id="프로필사진수정" parameterType="com.board.springboard.model.dto.User">
+        UPDATE users
+        SET profile_img = #{profile_img}
+        WHERE id = #{id}
+        <!-- WHERE 를 작성하지 않으면 users 테이블에 존재하는 모든 프로필이미지 수정 -->
+    </update>
+
+    <!-- TODO 1: 태그명, id, parameterType, resultType 을 채우세요 -->
+    <!--<select id="유저단건조회"
+    parameterType="String" User에서 email 이나 name으로 유저정보를 조회할 떄 사용
+                           개발자가 유저를 조회할 때 어떠한 방식으로 조회할 것인지에 따라 방향이 달라짐
+     resultType="com.board.springboard.model.dto.User">-->
+    <select id="유저단건조회" parameterType="int" resultType="com.board.springboard.model.dto.User">
+        SELECT *
+        FROM users
+        WHERE id = #{id}
+    </select>
 </mapper>
