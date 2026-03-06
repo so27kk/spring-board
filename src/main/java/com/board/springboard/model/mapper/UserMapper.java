@@ -57,4 +57,9 @@ public interface UserMapper {
 
     // TODO 2: 반환타입과 매개변수를 채우세요 (XML의 id값과 메서드명이 일치해야 합니다)
     User 유저단건조회(int id);
+
+    // TODO 2: 반환타입과 매개변수를 채우세요
+    void 유저정보수정(User user);
+
+
 }
