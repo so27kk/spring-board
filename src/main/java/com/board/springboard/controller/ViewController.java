@@ -12,56 +12,78 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/*
+api 에서 endpoint 는 ~~~ 됩니다.
+대소문자 / 대문자 -> 집중 주의 할 때 사용
+자바 파일 맨 첫글자만 주로 사용
+변수 상수
+상수 공간은 모두다 대문자 형태로 스네이크 케이스 형태로 사용
+
+api 주소들의 모음
+ @GetMapping
+  endpoint = "/"               도메인이 정의 내리는 마지막 지점
+  endpoint = "/board/detail"
+  endpoint = "/board/list"
+  endpoint = "/board/write"
+  endpoint = "/board/edit"
+  endpoint = "/board/delete"
+ @PostMapping
+  endpoint = "/board/write"
+
+⭕               @Controller     ⭕ -> 마지막에 view 화면을 보여주는 것
+
+❌아직 안합니다. @RestController ❌ -> DB에서 가져온 데이터를 Json 형태로 화면에서 보여주는 것
+ */
+
+
 @Controller // jsp 나 html 템플릿과 소비자가 연결해야하는 api 주소 작성
 @RequiredArgsConstructor // 이 한줄이 생성자 코드를 자동 생성해준다.
 public class ViewController {
-
     private final BoardService boardService;
-
     /*
     아래 생성자 매개변수 코드를 @RequiredArgsConstructor 어노테이션으로
     대체하여 사용할 수 있다.
-    생성자 직접 작성 방법
-                        서비스를 매개변수로 받아서
+    생성자 직접 작성방법
+                             서비스를 매개변수로 받아서
     public ViewController(BoardService boardService) {
         this.boardService = boardService; -> 클래스 필드에 직접 대입해서 사용하겠다.
     }
-    */
-
+     */
     /**
      * 메인 페이지로 이동
-     * @return  index.jsp
+     * @return index.jsp
      */
     @GetMapping("/")
-    public String indexView(){
+    public String indexView() {
         return "index";
     }
     /*
-    <td><a href="/board/detail?no=${board.board_no}" class="text-decoration-none">${board.title}</a></td>
+    <a href="/board/detail?no=${board.board_no}">
+        ${board.title}
+    </a>
      */
-
     /**
      * 게시물 상세 조회 페이지 이동
      * @param board_no 조회할 게시물 번호
-     * @param model 단일 게시물 데이터를 jsp로 전달하기 위한 객체
-     * @return  board/detail.jsp
+     * @param model    단일 게시물 데이터를 jsp로 전달하기 위한 객체
+     * @return          board/detail.jsp
      */
     @GetMapping("/board/detail")
-    public String detailView(@RequestParam("no") int board_no, Model model){
-        //조회수 증가 및 상세 데이터 가져오기 처리
-        //가져온 데이터를 board 폴더 내에 있는 detail 전달
+    public String detailView(@RequestParam("no") int board_no, Model model) {
+        // 조회수 증가 및 상세 데이터 가져오기 처리
+        // 가져온 데이터를 board 폴더 내에 있는 detail 전달
         Board boardData = boardService.boardDetail(board_no);
         model.addAttribute("board", boardData);
         return "board/detail";
     }
-
     /**
      * 게시물 목록 조회 및 페이지 이동
      * @param model 게시물 리스트 데이터를 전달하기 위한 객체
-     * @return      /board/product_list.jsp
+     * @return      board/product_list.jsp
      */
+
     @GetMapping("/board/list")
-    public String listView(Model model){
+    public String listView(Model model) {
         List<Board> boardListData = boardService.findAllBoard();
         model.addAttribute("boardLists", boardListData);
         /*
@@ -71,42 +93,36 @@ public class ViewController {
          */
         return "board/list";
     }
-
     /**
      * 게시물 작성 페이지 이동
-     * @return  board/write.jsp
+     * @return board/write.jsp
      */
     @GetMapping("/board/write")
-    public String writeView(){
+    public String writeView() {
         return "board/write";
     }
-
     /**
      * 게시물 작성 처리 (DB저장)
-     * @param board 작성된 데이터가 담긴DTO
+     * @param board 작성된 데이터가 담긴 DTO
      * @return      게시물 목록으로 리다이렉트
      */
+
     @PostMapping("/board/write")
-    public String writeBoard(Board board){
+    public String wrtieBoard(Board board) {
         boardService.writeBoard(board);
         return "redirect:/board/list";
     }
-
     /**
      * 게시물 수정 이동 (기존 데이터 조회 포함)
      * @param board_no 수정해야하는 게시물 번호
      * @param model    기존 데이터를 전달하기 위한 객체
      * @return         board 폴더 안에 존재하는 edit 파일로 이동
      */
-
     @GetMapping("/board/edit")
     public String editView(@RequestParam("no") int board_no, Model model) {
-
         Board board = boardService.boardDetail(board_no);
-
         model.addAttribute("board", board);
-
-        return "/board/edit";
+        return "board/edit";
     }
 
     /**
@@ -114,16 +130,14 @@ public class ViewController {
      * @param board_no : JSP 에서 'no' 라는 이름으로 보낸 게시물 번호
      * @return : 삭제 후 게시물 목록 페이지로 이동
      *
-     * redirect : 서버가 웹사이트에게 다른 주소로 다시 가라고 명령하는 것,
+     * redirect : 서버가 웹 사이트에게 다른 주소로 다시 가라고 명령하는 것,
      * 사용자가 보낸 요청을 서버가 처리하고 나서, 현재 페이지에 머무는 것이 아니라
      * 새로운 페이지를 처음부터 다시 호출하게 만들 때 사용
-     * -> 저장하고ㅡ 살제할 일 다했으니 지금 페이지에 있지마시고 ㅇㅇㅇ 페이지로 이동하세요.
+     * -> 저장하고,삭제할 일 다했으니 지금  페이지에 있지마시고 ㅇㅇㅇ 페이지로 이동하세요.
      */
     @GetMapping("/board/delete")
     public String deleteBoard(@RequestParam("no") int board_no) {
-
         boardService.deleteBoard(board_no);
-
         return "redirect:/board/list";
     }
 }
