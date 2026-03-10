@@ -139,11 +139,27 @@ public class ViewController {
      * jsp 에서 input name="imageFile" 인 이미지 파일을 가져와서 백엔드로 넣을 것이지만 필수는 아니다.  <br>
      * 굳이 이미지 데이터가 있어야 하는 것은 아니다. ^^  <br>
      * required=false 를 쓰지 않으면 기본적으로 모든 매개변수 속성은 required=true 로 되어있다. <br>
+
+     @PostMapping("/board/write")
+     public String wrtieBoard(Board board, @RequestParam(required = false,
+     value = "imageFile") MultipartFile imageFile) throws Exception {
+     boardService.writeBoard(board, imageFile);
+     return "redirect:/board/list";
+     }
+     */
+
+
+    /**
+     * 게시물 작성 처리 (다중 이미지 포함)
+     * @param board         form 에서 전송된 게시물 데이터(title, writer, content)
+     * @param imageFiles    &lt;input type="file" name="imageFile"&gt; 로 전송된  첨부 이미지 파일<br>
+     *                      이미지가 없어도 게시물 작성 가능하도록 required=false 작성
+     * @return              저장 완료 후 게시물 목록으로 리다이렉트
+     * @throws Exception    문제가 발생했을 경우 개발자가 회사의 방침에 따라 예외 처리
      */
     @PostMapping("/board/write")
-    public String wrtieBoard(Board board, @RequestParam(required = false,
-            value = "imageFile") MultipartFile imageFile) throws Exception {
-        boardService.writeBoard(board, imageFile);
+    public String wrtieBoard(Board board, @RequestParam(required = false) List<MultipartFile> imageFiles) throws Exception {
+        boardService.writeBoard(board, imageFiles);
         return "redirect:/board/list";
     }
 
