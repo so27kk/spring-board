@@ -27,7 +27,8 @@
                 <label class="form-label">내용</label>
                 <textarea name="content" class="form-control" rows="10" required></textarea>
             </div>
-            <input type="file" name="imageFile" accept="image/*" onchange="미리보기기능(this)">
+            <input type="file" name="imageFiles" accept="image/*" multiple onchange="미리보기기능(this)">
+            <div id="이미지개수"></div>
             <img id="미리보기" src="" style="display:none;">
 
             <div class="text-center mt-4">
@@ -75,15 +76,36 @@
 </div>
 <script>
     function 미리보기기능(input) {
-        const preview = document.getElementById("미리보기");
-        if (input.files && input.files[0]) {
+        const 미리보기영역 = document.getElementById("미리보기");
+        const 이미지개수 = document.getElementById("이미지개수");
+
+        미리보기영역.innerHTML = "";
+
+        const 파일들 = Array.from(input.files);
+
+        //5장 초과시 경고 후 선택 초기화
+        if(파일들.length > 5){
+            이미지개수.textContent = "최대 5장 까지만 업로드 가능합니다.";
+            이미지개수.style.color = "red"
+            //javaScript 에서 직접적으로 style 사용을 지양하여 style 권고하지는 않지만
+            // <>태그.style. 이후 부터는 적용할 수 있는 스타일에 대하여 제안을 제공해준다
+            input.value=""; //input 내에서 5개 이상 선택된 파일들을 모두 제거한다
+            return; // 5개 이상이 될 경우 추가할 필요도 없이 돌려 보내기
+        }
+
+        이미지개수.textContent = "선택된 이미지 : " + 파일들.length + "장";
+        이미지개수.style.color = "#888"; // 0에 가깝기 때문에 검정에 가까운 회색
+
+        // if (input.files && input.files[0]) {
+        파일들.forEach(function (파일하나){
             const reader = new FileReader();
             reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = "block";
+                const 이미지 = document.createElement("img");
+                이미지.src = e.target.result;
+                미리보기영역.appendChild(이미지);
             };
-            reader.readAsDataURL(input.files[0]);
-        }
+            reader.readAsDataURL(파일하나);
+        });
     }
 </script>
 </body>
