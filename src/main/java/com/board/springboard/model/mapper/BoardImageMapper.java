@@ -1,6 +1,5 @@
 package com.board.springboard.model.mapper;
 
-import com.board.springboard.model.dto.Board;
 import com.board.springboard.model.dto.BoardImage;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,7 +15,7 @@ public interface BoardImageMapper {
     void 이미지저장(BoardImage boardImage);
 
     /**
-     * 특정 게시물의 모든 이미지 전체 조회
+     * 특정 게시물의 모~든 이미지 전체 조회
      * @param board_no
      * @return
      */
@@ -27,5 +26,4 @@ public interface BoardImageMapper {
      * @param board_no
      */
     void 이미지전체삭제(int board_no);
-
 }
