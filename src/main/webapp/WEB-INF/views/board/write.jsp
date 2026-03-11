@@ -54,7 +54,8 @@
             <div id="미리보기" class="d-flex flex-wrap gap-2 mt-2"></div>
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-dark px-4">저장하기</button>
+                <!-- button type="button" onclick="함수기능이름()">버튼</button -->
+                <button type="button" class="btn btn-dark px-4" onclick="저장하기기능()">저장하기</button>
                 <!--
                 <button> 태그 type = submit  button  reset
 
@@ -133,6 +134,32 @@
             };
             reader.readAsDataURL(파일하나);
         });
+    }
+
+    function 저장하기기능(){
+        const 제목 = document.querySelector("input[name='title']");
+        const 작성자 = document.querySelector("input[name='writer']");
+        const 내용 = document.querySelector("textarea[name='content']");
+
+        if(제목.value.trim() === ""){
+            alert("제목을 입력하세요");
+            제목.focus();
+            return;
+        }
+        if (작성자.value.trim() === ""){
+            alert("작성자를 입력하세요");
+            작성자.focus();
+            return;
+        }
+        if (내용.value.trim() === ""){
+            alert("내용을 입력하세요");
+            내용.focus();
+            return;
+        }
+
+        document.querySelector("form").submit();
+        // querySelect 안에는 태그이름, 이름속성, 아이디속성, 클래스속성
+        // 모든 것을 작성할 수 있다              .아이디이름  #클래스이름
     }
 </script>
 </body>

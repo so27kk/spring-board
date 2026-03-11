@@ -5,21 +5,22 @@
     <div class="card p-4 shadow-sm">
         <h2 class="mb-4 text-center fw-bold">✏️ 제품 수정</h2>
         <form action="/product/edit" method="post">
+            <!-- 이 태그가 필요한 이유: 수정하려는 제품의 데이터를 나주에 전달하기 위하여 id 필요 -->
             <input type="hidden" name="id" value="${product.id}">
             <div class="mb-3">
                 <label class="form-label">제품명</label>
-                <input type="text" name="name" value="${product.name}" class="form-control" required>
+                <input type="text" name="name" value="${product.name}" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">가격</label>
-                <input type="number" name="price" value="${product.price}" class="form-control" required>
+                <input type="number" name="price" value="${product.price}" class="form-control">
             </div>
             <div class="mb-3">
                 <label class="form-label">재고</label>
-                <input type="number" name="stock" value="${product.stock}" class="form-control" required>
+                <input type="number" name="stock" value="${product.stock}" class="form-control">
             </div>
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-warning">수정 완료</button>
+                <button type="button" onclick="수정하기기능()" class="btn btn-warning">수정 완료</button>
                 <a href="/product/list" class="btn btn-outline-secondary">취소</a>
             </div>
         </form>

@@ -12,17 +12,16 @@
 <div class="container mt-5" style="max-width: 100%">
     <div class="fw-bold mb-4">게시물 수정</div>
     <form> <!-- action="/board/edit" method="post" -->
-        <input type="hidden" name="board_no" value="${board.board_no}">
+        <input name="board_no" value="${board.board_no}">
 
         <div class="mb-3">
             <label for="title" class="form-label fw-semibold">제목</label>
-            <input type="text" id="title" name="title" class="form-control" value="${board.title}" required>
+            <input type="text" id="title" name="title" class="form-control" value="${board.title}">
         </div>
 
         <div class="mb-3">
             <label for="content" class="form-label fw-semibold">내용</label>
-            <input type="text" id="content" name="content" class="form-control" rows="10" value="${board.content}"
-                   required>
+            <input type="text" id="content" name="content" class="form-control" rows="10" value="${board.content}">
         </div>
 
         <div class="text-end">
@@ -37,11 +36,28 @@
     function       수정완료버튼기능()   {}
     */
     function 수정완료버튼기능(){
+            const 제목 = document.getElementById("title");
+            const 콘텐츠 = document.getElementById("content");
+
+        if(제목.value.trim() === "") {
+            alert("제목을 입력해주세요.");
+            제목.focus();
+            return;
+        }
+
+        if(내용.value.trim() === "") {
+            alert("내용을 입력해주세요.");
+            콘텐츠.focus();
+            return;
+        }
+
         const 백엔드로_전달할_데이터들 = {
             board_no : document.getElementById("board_no").value,
-            title    : document.getElementById("title").value,
-            content  : document.getElementById("content").value
+            title : 제목,
+            content : 콘텐츠
+
         };
+
         fetch("/board/edit", {
             method: 'PUT',
             headers: {"Content-Type": "application/json"},
