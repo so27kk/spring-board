@@ -60,8 +60,16 @@ public class ProductController {
         model.addAttribute("product", productData); // 수정할 제품 데이터를 SQL에서 가져온 후 JSP 전달하기
         return "product/editForm";
     }
-
-    // TODO 10. POST /product/edit → 제품 수정 처리 후 redirect
+    //TODO : 수정 Mapping 을 Put 으로 교체하고, 수정된 product 데이터를 수정페이지로 전달로 교체하기
+    @PutMapping("/edit")
+    @ResponseBody
+    public Product 제품수정처리(@ModelAttribute Product product,
+                         RedirectAttributes redirectAttributes) {
+        productService.제품수정(product);
+        redirectAttributes.addFlashAttribute("msg", "제품이 수정되었습니다.");
+        return product;
+    }
+    /*
     @PostMapping("/edit")  // Post / Put / Patch 차이점을 인지하고 사용하자 제품 수정하는데 문제는 없다.
     public String 제품수정처리(@ModelAttribute Product product,
                          RedirectAttributes redirectAttributes) {
@@ -70,8 +78,18 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("msg", "제품이 수정되었습니다.");
         return "redirect:/product/list";
     }
+     */
 
-    // TODO 11. GET /product/delete?id=1 → 삭제 처리 후 redirect
+    @DeleteMapping("/delete") //삭제 기능이다.
+    @ResponseBody // html로 넘어가는 것이아니라 html 기능에 대한 결과만 전달하겠다
+    public String 제품삭제처리(@RequestParam int id,
+                         RedirectAttributes redirectAttributes) {
+        productService.제품삭제(id);
+        redirectAttributes.addFlashAttribute("msg", "제품이 삭제되었습니다.");
+        // 제품 리스트로 돌아가서 제품이 삭제되었다는 메세지를 잠깐 보기위해 redirectAttributes 로 가져온다.
+        return "ok";
+    }
+    /*
     @GetMapping("/delete") // ? 이후는 Mapping 에서 작성하지 않는다.
     public String 제품삭제처리(@RequestParam int id,
                          RedirectAttributes redirectAttributes) {
@@ -79,7 +97,7 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("msg", "제품이 삭제되었습니다.");
         // 제품 리스트로 돌아가서 제품이 삭제되었다는 메세지를 잠깐 보기위해 redirectAttributes 로 가져온다.
         return "redirect:/product/list";
-    }
+    }*/
 }
 
 
