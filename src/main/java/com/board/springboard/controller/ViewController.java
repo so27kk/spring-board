@@ -2,6 +2,8 @@ package com.board.springboard.controller;
 
 
 import com.board.springboard.model.dto.Board;
+import com.board.springboard.model.dto.BoardImage;
+import com.board.springboard.model.mapper.BoardImageMapper;
 import com.board.springboard.model.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -41,6 +43,7 @@ api 주소들의 모음
 @RequiredArgsConstructor // 이 한줄이 생성자 코드를 자동 생성해준다.
 public class ViewController {
     private final BoardService boardService;
+    private final BoardImageMapper boardImageMapper;
     /*
     아래 생성자 매개변수 코드를 @RequiredArgsConstructor 어노테이션으로
     대체하여 사용할 수 있다.
@@ -79,6 +82,11 @@ public class ViewController {
         // 가져온 데이터를 board 폴더 내에 있는 detail 전달
         Board boardData = boardService.boardDetail(board_no);
         model.addAttribute("board", boardData);
+
+        // service 에서 컨트롤러로 가져와야한다
+        List<BoardImage> 이미지들데이터 = boardImageMapper.이미지목록(board_no);
+        model.addAttribute("images", 이미지들데이터);
+
         return "board/detail";
     }
 
@@ -175,6 +183,12 @@ public class ViewController {
         Board board = boardService.boardDetail(board_no);
         model.addAttribute("board", board);
         return "board/edit";
+    }
+
+    @PostMapping("/board/edit")
+    public String editBoard(Board board) {
+        boardService.updateBoard(board);
+        return "redirect:/board/detail?no=" + board.getBoard_no();
     }
 
     /**

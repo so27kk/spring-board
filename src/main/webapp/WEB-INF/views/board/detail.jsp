@@ -15,7 +15,7 @@
         <h2 class="fw-bold">${board.title}</h2>
 
         <div class="text-muted mb-4">
-            작성자: ${board.writer} | 작성일: ${created_at} | 조회수: ${board.view_count}
+            작성자: ${board.writer} | 작성일: ${board.created_at} | 조회수: ${board.view_count}
         </div>
 
         <hr>
@@ -24,8 +24,8 @@
             ${board.content}
         </div>
         <c:if test="${not empty images}">
-            <c:forEach var="image" items="${images}">
-                <img src="${image.img_path}">
+            <c:forEach var="이미지한장씩" items="${images}">
+                <img class="img-fluid" src="${이미지한장씩.img_path}">
             </c:forEach>
         </c:if>
         <hr>

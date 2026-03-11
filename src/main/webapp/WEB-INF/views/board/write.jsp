@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <title>게시물 작성</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .미리보기이미지{
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            border: 1px solid #dee2e6;
+        }
+        .이미지개수-오류{
+            color: red;
+        }
+        .이미지개수-정상{
+            color: #888;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
@@ -27,15 +42,15 @@
                 <label class="form-label">내용</label>
                 <textarea name="content" class="form-control" rows="10" required></textarea>
             </div>
-
             <div class="mb-3">
                 <label class="form-label">
                     이미지 첨부 <span class="text-muted">(최대 5장)</span>
                 </label>
-            <input type="file" name="imageFiles" accept="image/*" multiple class="form-control" onchange="미리보기기능(this)">
-                <div id="이미지개수" class="small text-muted mt-1"></div>
+                <input type="file" name="imageFiles" accept="image/*" multiple
+                       class="form-control" onchange="미리보기기능(this)">
+                <div id="이미지개수" class="small mt-1"></div>
             </div>
-            <!--<img id="미리보기" src="" style="display:none;"-->
+            <!--img id="미리보기" src="" style="display:none;" -->
             <div id="미리보기" class="d-flex flex-wrap gap-2 mt-2"></div>
 
             <div class="text-center mt-4">
@@ -83,35 +98,37 @@
 </div>
 <script>
     function 미리보기기능(input) {
+        // 이미지 개수 / 5장 초과시 경고 후 선택 초기화 하거나
+        // 선택된 파일마다 미리보기 생성
         const 미리보기영역 = document.getElementById("미리보기");
         const 이미지개수 = document.getElementById("이미지개수");
 
-        미리보기영역.innerHTML = "";
+        // 이미지 개수가 줄어들거나 이미지가 변경되면 이전 미리보기 없애기
+        미리보기영역.innerHTML = ""; // 미리보기영역 내에 존재하는 태그들 모두 지우기
 
         const 파일들 = Array.from(input.files);
 
-        //5장 초과시 경고 후 선택 초기화
-        if(파일들.length > 5){
+        // 5장 초과시 경고 후 선택 초기화
+        if (파일들.length > 5) {
             이미지개수.textContent = "최대 5장 까지만 업로드 가능합니다.";
-            이미지개수.style.color = "red"
-            //javaScript 에서 직접적으로 style 사용을 지양하여 style 권고하지는 않지만
-            // <>태그.style. 이후 부터는 적용할 수 있는 스타일에 대하여 제안을 제공해준다
-            input.value=""; //input 내에서 5개 이상 선택된 파일들을 모두 제거한다
-            return; // 5개 이상이 될 경우 추가할 필요도 없이 돌려 보내기
+            이미지개수.className = "이미지개수-오류";
+            // javaScript 에서 직접적으로 style 사용을 지양하여 style 권고하지는 않지만
+            // <>태그.style. 이후 부터는 적용할 수 있는 스타일에 대하여 제안을 제공해준다.
+            input.value = ""; // input 내에서  5개 이상 선택된 파일들을 모두 제거한다.
+            return; // 5개 이상이 될경우 추가할 필요도없이 돌려보내기
         }
 
         이미지개수.textContent = "선택된 이미지 : " + 파일들.length + "장";
-        이미지개수.style.color = "#888"; // 0에 가깝기 때문에 검정에 가까운 회색
+        이미지개수.className = "이미지개수-정상"; // 0에 가깝기 때문에 검정에 가까운 회색
 
-        // if (input.files && input.files[0]) {
-        파일들.forEach(function (파일하나){
+        //       if (input.files && input.files[0]) {
+        파일들.forEach(function (파일하나) {
             const reader = new FileReader();
             reader.onload = function (e) {
                 const 이미지 = document.createElement("img");
                 이미지.src = e.target.result;
                 이미지.className = "rounded border object-fit-cover";
-                이미지.style.width = "120px";
-                이미지.style.height = "120px";
+                이미지.className = "미리보기이미지";
                 미리보기영역.appendChild(이미지);
             };
             reader.readAsDataURL(파일하나);
