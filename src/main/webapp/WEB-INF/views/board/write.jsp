@@ -156,21 +156,18 @@
             제목.focus();
             return;
         }
-        // ① 제목이 비어있으면 경고 후 포커스, 함수 종료
         if (제목.trim() === "") {
             alert("제목을 작성하시오.");
             제목.focus();
             return;
         }
 
-        // ② 작성자가 비어있으면 경고 후 포커스, 함수 종료
         if (작성자.value.trim() === "") {
             alert("작성자를 입력하세요.");
             작성자.focus();
             return;
         }
 
-        // ③ 내용이 비어있으면 경고 후 포커스, 함수 종료
         if (내용.value.trim() === "") {
             alert("내용을 입력하세요.");
             내용.focus();
@@ -178,11 +175,51 @@
         }
 
         // ④ 검증 통과 시 form 제출
-        document.querySelector("form").submit();
+        //  document.querySelector("form").submit();
         // querySelect 안에는 태그이름, 이름속성, 아이디속성, 클래스속성
         // 모든 것을 작성할 수 있다.             .아이디이름  #클래스이름
-    }
 
+        // ai 가 추천하는 긴 로직을 작성하지 않아도
+        // form 내부에 작성된 데이터들을 백엔드로 전송할 수 있다.
+        // append 쓸 때는 추가적인 세부 커스텀이 필요할 때
+        const formData = new FormData(document.querySelector("form"));
+
+        fetch("/board/write", {
+            method: "post",
+            body: formData,
+        })
+            .then((res) => res.json())
+            .then(결과 => {
+                location.href = "/board/list";
+            })
+            .catch(err => console.log(err));
+
+
+        /*
+            AI 로 습득할 로직 = 레거시 방식
+            const formData = new FormData();   // 파일 전송을 도와주는 javaScript 객체
+            formData.append("title", 제목.value);
+            formData.append("writer", 작성자.value);
+            formData.append("content", 내용.value);
+
+            const 파일들 = document.querySelector("input[name='imageFiles']").files;
+            for (let i = 0; i < 파일들.length; i++) {
+                formData.append("imageFiles", 파일들[i]);
+            }
+
+            fetch("/board/write", {
+                method: "post",
+                body: formData,
+            })
+                .then(res => res.json())
+                .then(결과 => {
+                    location.href = "/board/list";
+                })
+                .catch(err => console.log(err));
+
+
+        */
+    }
 </script>
 </body>
 </html>
