@@ -20,27 +20,27 @@
     </c:choose>
 
     <!-- 프로필 사진 수정하기 위한 업로드 폼-->
-    <form action="/user/profile/upload" method="post" enctype="multipart/form-data">
+    <form id="uploadForm" enctype="multipart/form-data">
         <input type="file" name="imageFile" accept="image/*" onchange="미리보기기능(this)">
         <button class="btn btn-dark mt-2">저장하기</button>
     </form>
 
     <!-- TODO 5: 빈칸을 채우세요 -->
-    <form action="/user/profile/edit" method="post">
+    <form >
 
         <table class="table mt-3">
             <tr>
                 <td>이름</td>
                 <td>
                     <!-- TODO 5-1: 이름 수정 input, value 에 기존 이름 세팅 -->
-                    <input type="text" name="name" value="${user.name}" class="form-control">
+                    <input type="text" name="name" id="name" value="${user.name}" class="form-control">
                 </td>
             </tr>
             <tr>
                 <td>이메일</td>
                 <td>
                     <!-- TODO 5-2: 이메일 수정 input, value 에 기존 이메일 세팅 -->
-                    <input type="text" name="email" value="${user.email}" class="form-control">
+                    <input type="text" name="email" id="email" value="${user.email}" class="form-control">
                 </td>
             </tr>
             <tr>

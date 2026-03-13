@@ -14,7 +14,7 @@ public class BoardApiController {
     private final BoardService boardService;
 
     @PostMapping("/board/write")
-    public Board writeBoard(Board board, @RequestParam(required = false)List<MultipartFile> imageFiles) throws Exception{
+    public Board writeBoard(@ModelAttribute Board board, @RequestParam(required = false)List<MultipartFile> imageFiles) throws Exception{
         boardService.writeBoard(board, imageFiles);
         // return "redirect:/board/list"; // jsp 로 이동하는게 아니라 화면에 redirect:/board/list 글자가 찍힐 것
         return board; // board 데이터가 화면으로 전달되거나 보통 성공 실패에 대한 결과를 전달 ResponseEntity 라는 개념... 어렵다.
