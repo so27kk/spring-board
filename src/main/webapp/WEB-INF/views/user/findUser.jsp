@@ -73,9 +73,9 @@
             if (결과.email) {
                 const 성공div = document.createElement("div");
                 성공div.className = "alert alert-success";
-                성공div.innerText = "이메일 : " + 결과.email;
-                결과창.innerHTML = "";       // 기존에 존재하는 에러나, 실패메세지를 한 번 밀어버리기
-                결과창.appendChild(성공div)  // 결과창 내부에 성공div를 추가
+                성공div.textContent = "이메일 : " + 결과.email;
+                결과창.innerHTML = "";
+                결과창.appendChild(성공div)
                 // innerText 형태로 변경해서 작성
                 // 결과창.innerHTML = `<div class="alert alert-success">이메일 : ${결과.email} </div>`;
                 // 결과창.innerHTML = '<div class="alert alert-success">이메일 : ' + 결과.email + '</div>';

@@ -1,91 +1,82 @@
-<!-- JSP 확장자는 스프링부트 에서 지양하는 확장자이기 때문에 한글 인코딩 설정을 넣어줘야함
-우리나라는 JSP 형태로 웹 파일을 만들어왔기 때문에 아래와 같은 형식을 사용하는 습관 들여야한다. -->
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="utf-8" %>
+function 파일을Base64로읽기(file) {
+return new Promise((resolve, reject) => {
+const reader = new FileReader();
+reader.onload  = (e) => resolve(e.target.result);
+reader.onerror = () => reject(new Error("파일 읽기 실패"));
+reader.readAsDataURL(file);
+});
+}
 
-<%@ include file="../common/header.jsp" %>
+async function 미리보기기능(input) {
+const preview = document.getElementById("미리보기");
+const noImg   = document.getElementById("noImg");
 
-<div class="container mt-5">
-    <h2>내 프로필</h2>
-    <!-- 프로필 사진 미리보기 -->
-    <c:choose>
-        <c:when test="${not empty user.profile_img}">
-            <img src="${user.profile_img}" alt="프로필 사진" width="120">
-        </c:when>
-        <c:otherwise>
-            <img id="미리보기" src="" style="display: none; width: 120px;">
-            <p id="noImg">이미지 없습니다.</p>
-        </c:otherwise>
-    </c:choose>
+if (!input.files || !input.files[0]) return;
 
-    <!-- 프로필 사진 수정하기 위한 업로드 폼-->
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" name="imageFile" accept="image/*" onchange="미리보기기능(this)">
-        <button class="btn btn-dark mt-2">저장하기</button>
-    </form>
+try {
+const dataUrl = await 파일을Base64로읽기(input.files[0]);
+preview.src = dataUrl;
+preview.style.display = "block";
+if (noImg) noImg.style.display = "none";
 
-    <!-- TODO 5: 빈칸을 채우세요 -->
-    <form >
+} catch (err) {
+console.error("미리보기 실패:", err);
+alert("이미지를 불러오지 못했습니다.");
+}
+}
 
-        <table class="table mt-3">
-            <tr>
-                <td>이름</td>
-                <td>
-                    <!-- TODO 5-1: 이름 수정 input, value 에 기존 이름 세팅 -->
-                    <input type="text" name="name" id="name" value="${user.name}" class="form-control">
-                </td>
-            </tr>
-            <tr>
-                <td>이메일</td>
-                <td>
-                    <!-- TODO 5-2: 이메일 수정 input, value 에 기존 이메일 세팅 -->
-                    <input type="text" name="email" id="email" value="${user.email}" class="form-control">
-                </td>
-            </tr>
-            <tr>
-                <td>가입일</td>
-                <!-- TODO 5-3: 가입일은 input 없이 텍스트만 출력 (수정 불가) -->
-                <td>${user.create_at}</td>
-            </tr>
-        </table>
-    </form>
-    <table class="table mt-3">
-        <tr>
-            <td>이름</td>
-            <td>${user.name}</td>
-        </tr>
-        <tr>
-            <td>이메일</td>
-            <td>${user.email}</td>
-        </tr>
-        <tr>
-            <td>가입일</td>
-            <td>${user.create_at}</td>
-        </tr>
-    </table>
-    <a href="/" class="btn btn-outline-dark">메인으로</a>
-</div>
+async function 프로필사진업로드() {
+const 메시지창 = document.getElementById("메시지창");
 
+try {
+const formData = new FormData(document.getElementById("uploadForm"));
 
-<script>
-    function 미리보기기능(input) {
-        const preview = document.getElementById("미리보기");
-        const noImg = document.getElementById("noImg");
+const 응답 = await fetch("/user/profile/upload", {
+method: "POST",
+body: formData
+});
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                preview.src = event.target.result; // 선택한 사진 미리보기
-                preview.style.display = "block";
-                if (noImg) {
-                    noImg.style.display = "none";
-                }
-            };
-            reader.readAsDataURL(input.files[0]);
+if (!응답.ok) throw new Error(`서버 오류: ${응답.status}`);
 
-        }
-    }
-</script>
+const div = document.createElement("div");
+div.className = "alert alert-success";
+div.innerText = "프로필 사진이 업로드되었습니다.";
+메시지창.innerHTML = "";
+메시지창.appendChild(div);
 
-<%@ include file="../common/footer.jsp" %>
+} catch (err) {
+const div = document.createElement("div");
+div.className = "alert alert-danger";
+div.innerText = "사진 업로드 중 오류가 발생했습니다.";
+메시지창.innerHTML = "";
+메시지창.appendChild(div);
+}
+}
+
+async function 프로필정보수정() {
+const 메시지창 = document.getElementById("메시지창");
+const data = Object.fromEntries(new FormData(document.getElementById("editForm")).entries());
+
+try {
+const 응답 = await fetch("/user/profile/edit", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify(data)
+});
+
+if (!응답.ok) throw new Error(`서버 오류: ${응답.status}`);
+
+const div = document.createElement("div");
+div.className = "alert alert-success";
+div.innerText = "프로필 정보가 수정되었습니다.";
+메시지창.innerHTML = "";
+메시지창.appendChild(div);
+
+} catch (err) {
+const div = document.createElement("div");
+div.className = "alert alert-danger";
+div.innerText = "정보 수정 중 오류가 발생했습니다.";
+메시지창.innerHTML = "";
+메시지창.appendChild(div);
+}
+}
