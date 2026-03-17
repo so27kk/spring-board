@@ -36,36 +36,58 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil; // 토큰 검증은 util에 맡긴다.
 
+    /**
+     * protected   void      doFilterInternal
+     * 상속받은  전달할 것      의 뜻
+     * 자식만    없다        doFilter = 필터를 실행하겠다.
+     * 이용가능              Internal = Spring 이 만든 내부 기능을
+     * *********************************************************************
+     * @param 요청           브라우저가 보낸 요청 경로
+     * @param 응답           브라우저 요청에 대한 응답을 서버가 전달할 때 들고갈 정보
+     * @param 다음필터          우리 필터 작업은 끝났고, 다음 작업으로 바통터치할 때 사용
+     * @throws ServletException 서버 연결 에러 발생하는 경우
+     * @throws IOException      데이터 주고 받을 떄 발생하는 경우
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest 요청,
                                     HttpServletResponse 응답,
                                     FilterChain 다음필터) throws ServletException, IOException {
-        String token = 쿠키에서토큰꺼내기(요청);
+        String token = 쿠키에서토큰꺼내기(요청); // 쿠키에서 access_token 꺼내기 없으면 null 반환
 
+        // 토큰이 있고 유효하면 -> 스프링 보안팀 (=시큐리티)에 로그인 상태 등록
+        // 토큰이 존재하고      만료/변조된 토큰이 아니면
         if(token != null && jwtUtil.유효토큰인지확인하는기능(token)){
 
-            String email = jwtUtil.이메일가져오기(token);
+            String email = jwtUtil.이메일가져오기(token); // 토큰 파싱해서 이메일 꺼내기
 
+            // 인증정보라는 공간에는 "이 사람 로그인 되었다" 라는 신분증을 생성한 데이터가 담겨져 있다
             UsernamePasswordAuthenticationToken 인증정보 =
                     new UsernamePasswordAuthenticationToken(
-                            email,
-                            null,
-                            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                            email,                                            // 팔찌 주인의 이메일
+                            null,                                             // 비밀번호(이미 검증했으니
+                            List.of(new SimpleGrantedAuthority("ROLE_USER"))  // 권한 목록들 중에서 일반 유저
                     );
+            // Spring 보안팀 경비실에 신분증 제출
+            // = 이 요청이 오면 로그인 상태로 처리해줘
             SecurityContextHolder.getContext().setAuthentication(인증정보);
         }
-        다음필터.doFilter(요청, 응답);
+        다음필터.doFilter(요청, 응답); // 바통 넘기기
+        // 로그인이 되었든 비로그인이 되었든 검증 할 일은 다 끝냈으니 일 할거있으면 해
+        // 차단은 SecurityConfig 가 담당
     }
-
+/**
+ * 쿠키에서 access_token 값만 꺼내기
+ **/
     private String 쿠키에서토큰꺼내기(HttpServletRequest 요청){
-        Cookie[] 쿠키목록 = 요청.getCookies();
-        if(쿠키목록 == null) return null;
+        Cookie[] 쿠키목록 = 요청.getCookies(); // 요청에 담긴 모든 쿠키 가져오기
+        if(쿠키목록 == null) return null; // 쿠키 자체가 없으면 null 반환
 
+        // 쿠키 목록들을 스트림으로 변환
         return Arrays.stream(쿠키목록)
-                .filter(c -> "access_token".equals(c.getName()))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
+                .filter(c -> "access_token".equals(c.getName())) // access_token 이름인 쿠키만 통과
+                .map(Cookie::getValue) // 쿠키 객체에서 값(토큰 문자열) 만 꺼내기
+                .findFirst() // 첫 번쨰 결과 가져오기
+                .orElse(null); // 없으면 null 반환
     }
 
 }
