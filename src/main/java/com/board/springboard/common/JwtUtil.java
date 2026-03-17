@@ -51,19 +51,20 @@ public class JwtUtil {
 
     @Value("${jwt.refresh-expiry}")
     private long 리프레시토큰만료기간; // 14일
+    // 가져오는 속도보다 실행속도가 빠르므로 에러가 날 가능성이 크기 때문에
+    // @PostConstruct 이용해서 데이터를 확실하게 넣는 것 가지보고 한줄 실행하겠다. 사용
+    //private SecretKey 키 = Keys.hmacShaKeyFor(시크릿키값.getBytes());
 
-    private SecretKey 키;  // 암호화에 실제로 사용할 키 객체 문자열이 아니라 암호화용 도구 객체사용
 
     /**
      * 다른 것들이 Spring 에서 @어노테이션 등록처리가 다 되고나면 나를 실행하거라!
      * 실행 순서를 설정상 모든 것을 끝낸 후 진행하겠다 배치
      * 생성자가 기본환경설정 세팅이 완료되면 실행되고자 할 때 표기
      */
+    private SecretKey 키;
     @PostConstruct
     public void 초기화() {
         this.키 = Keys.hmacShaKeyFor(시크릿키값.getBytes());
-        // application.yml 에작성한 시크릿키값을 암호화 객체로 변환 처리
-        // 암호화 처리 끝난 형태를 문자열로 가져와서 숫자 바이트 배열로 사용하겠다.
     }
     // =========================== 토큰만들기 ===========================
     /**
