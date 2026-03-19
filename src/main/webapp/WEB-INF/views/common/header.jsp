@@ -82,3 +82,30 @@
         </div>
     </div>
 </nav>
+
+<script>
+    // async 비동기 = 이 코드 안에 잠시 멈추고 백엔드 결과를 기다려야하는 코드가 들어있다. 표기
+    async function 로그인상태확인(){
+        try{
+            const res = await fetch("/user/profile-info", {method:"GET"})
+            if (res.ok){
+                const data = await res.json();
+                document.getElementById("메뉴_회원가입").classList.add("d-none");
+                document.getElementById("메뉴_로그인").classList.add("d-none");
+                document.getElementById("메뉴_프로필").classList.remove("d-none");
+                document.getElementById("메뉴_로그아웃").classList.remove("d-none");
+                document.getElementById("유저이름").textContent = data.name; // innerText innerHTML textContent
+                // querySelector 이용해서 .아이디이름 #클래스이름 태그이름 을 모두 작성할 수 있는 기능
+                // css 문법에서 아이디이름 클래스이름 태그이름 사용을 그대로 똑같이 사용
+            }
+        } catch (e){
+            console.log(e)
+        }
+    }
+
+    async function 로그아웃(){
+        await fetch("/user/logout", {method:"POST"});
+        window.location.href = "/";
+    }
+    로그인상태확인(); // 로그인 상태에 따라 header 보이는 네비게이션 글자가 달라진다.
+</script>
