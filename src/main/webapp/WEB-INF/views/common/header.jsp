@@ -40,7 +40,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/product/list">제품목록</a>
                 </li>
-
+                <%--
+                세션 방식 삭제
+                JWT 방식은 서버가 세션을 안 만들기 때문에 sessionScope.loginUser 가 항상비어있다.
+                항상 비로그인으로 보임
                 <c:if test="${empty sessionScope.loginUser}">
                     <li class="nav-item">
                         <a class="nav-link" href="/user/register">회원가입</a>
@@ -59,7 +62,22 @@
                         <a class="nav-link" href="/user/logout">로그아웃</a>
                     </li>
                 </c:if>
+                --%>
 
+                    <li class="nav-item" id="메뉴_회원가입">
+                        <a class="nav-link" href="/user/register">회원가입</a>
+                    </li>
+                    <li class="nav-item" id="메뉴_로그인">
+                        <a class="nav-link" href="/user/login">로그인</a>
+                    </li>
+
+                    <li class="nav-item d-none" id="메뉴_프로필">
+                        <a class="nav-link" href="/user/profile">
+                            <span id="유저이름"></span>님 환영해요!</a>
+                    </li>
+                    <li class="nav-item d-none" id="메뉴_로그아웃">
+                        <a class="nav-link" href="#" onclick="로그아웃()">로그아웃</a>
+                    </li>
             </ul>
         </div>
     </div>
