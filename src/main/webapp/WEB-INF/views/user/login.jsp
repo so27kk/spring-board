@@ -16,7 +16,7 @@
 
         <h2 class="mb-4 text-center fw-bold">로그인</h2>
 
-        <div id="알림창" class="d-none "></div>
+        <div id="알림창" class="d-none mb-3"></div>
 
         <%-- Login은 회사에서 요구하는 로직에 따라
              Post 도 가능하고 Get 가능
