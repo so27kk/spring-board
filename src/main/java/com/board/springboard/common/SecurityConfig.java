@@ -51,6 +51,7 @@ public class SecurityConfig {
                                 "/user/send-code",
                                 "/user/verify-code",
                                 "/user/token/refresh",
+                                "/user/profile-info",
                                 "/css/**", "/js/**", "/images/**", "/uploads/**"
                         ).permitAll()
                         .anyRequest().authenticated() // 이외 나머지 주소는 로그인을 한 후 접근할 수 있다.
