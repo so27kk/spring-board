@@ -2,63 +2,61 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <!--
-SQL 에서는 대소문자 구분을 하지 않는다
-하지만, 자바, 자바스크립트 에서는 대소문자 구분을 한다
+SQL 에서는 대소문자 구분을 하지 않는다.
+하지만, 자바, 자바스크립트 에서는 대소문자 구분을 한다.
 
 SQL 에서는 카멜 케이스가 적용되지 않기 때문에 스네이크 케이스(_) 를 사용
 자바에서는 카멜 케이스를 주로 사용
 
 SQL - Java 연동
-SQL 에서 스네이크 케이스로 작성한 컬럼명칭
-Java 에서 카멜 케이스로 작성한 컬럼명칭
+SQL  에서 스네이크 케이스로 작성한 컬럼명칭
+Java 에서    카멜 케이스로 작성한 컬럼명칭
 과 동일한 명칭 alias 개념
 
+.. .... 파스칼 케이스 케밥 케이스
 
-.... .... 파스칼 케이스 케밥 케이스
 케이스 : 카멜 / 스네이크 / 파스칼 / 케밥 케이스
 
 명명 규칙
 폴더이름 / 폴더 내 파일이름
 api 명칭 / endpoint 명칭에 대하여 정의
 
-api = endpoint 의 메뉴판
+api = endpoint 의 주소메뉴판
 endpoint = 개별 주소
 -->
 <mapper namespace="com.board.springboard.model.mapper.UserMapper">
+
     <select id="전체유저들" resultType="com.board.springboard.model.dto.User">
         SELECT *
         FROM users
     </select>
+
     <insert id="회원가입" parameterType="com.board.springboard.model.dto.User">
-        INSERT INTO users(name, email, created_at, password)
-        VALUES (#{name}, #{email}, NOW(), #{password})
+        INSERT INTO users(name,     email, create_at, password)
+        VALUES         (#{name}, #{email}, NOW(), #{password})
     </insert>
+
     <select id="이메일중복체크" parameterType="String" resultType="int">
         SELECT COUNT(*)
         FROM users
         WHERE email = #{email}
     </select>
 
-    <!-- 조건 : id = 로그인 / parameterType = String / resultType = User 전체 경로 -->
     <select id="로그인" parameterType="String" resultType="com.board.springboard.model.dto.User">
-        <!-- TODO 3. users 테이블에서 email 이 일치하는 유저를 조회하는 SQL 을 작성하시오 -->
         SELECT *
         FROM users
         WHERE email = #{email}
     </select>
 
-    <!-- TODO 2. 이메일로 유저를 조회하는 SQL 을 작성하시오 -->
-    <!-- 조건 : id = 이메일로유저찾기 / parameterType = String / resultType = User 전체경로 -->
     <select id="이메일로유저찾기" parameterType="String" resultType="com.board.springboard.model.dto.User">
-        <!-- TODO 3. users 테이블에서 email 이 일치하는 유저 전체를 조회하시오 -->
         SELECT *
         FROM users
         WHERE email = #{email}
     </select>
 
-    <!-- #{profile_img} -> #{profileImg} 교체해서 사용해보기
+    <!--
+    #{profile_img} -> #{profileImg} 교체해서 사용해보기
     자바에서 선언한 필드이름과 SQL에 작성한 컬럼명칭을
     카멜케이스와 스네이크케이스로 맞추어 사용할 수 있다.
     -->
@@ -66,14 +64,12 @@ endpoint = 개별 주소
         UPDATE users
         SET profile_img = #{profile_img}
         WHERE id = #{id}
-        <!-- WHERE 를 작성하지 않으면 users 테이블에 존재하는 모든 프로필이미지 수정 -->
     </update>
 
-    <!-- TODO 1: 태그명, id, parameterType, resultType 을 채우세요 -->
-    <!--<select id="유저단건조회"
-    parameterType="String" User에서 email 이나 name으로 유저정보를 조회할 떄 사용
-                           개발자가 유저를 조회할 때 어떠한 방식으로 조회할 것인지에 따라 방향이 달라짐
-     resultType="com.board.springboard.model.dto.User">-->
+    <!-- select id="유저단건조회"
+         parameterType="String" User에서 email 이나 name 으로 유저정보를 조회할 때 사용
+                                개발자가 유저를 조회할 때 어떠한 방식으로 조회할 것인지에 따라 방향이 달라짐
+         resultType="com.board.springboard.model.dto.User" -->
     <select id="유저단건조회" parameterType="int" resultType="com.board.springboard.model.dto.User">
         SELECT *
         FROM users
@@ -87,6 +83,4 @@ endpoint = 개별 주소
             email = #{email}
         WHERE id = #{id}
     </update>
-
-
 </mapper>

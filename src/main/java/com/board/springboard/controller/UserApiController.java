@@ -109,10 +109,11 @@ public class UserApiController {
         userService.프로필사진업로드(로그인유저, imageFile, uploadPath);
         return ResponseEntity.ok(Map.of("message", "프로필 사진 저장 완료"));
     }
+
     @GetMapping("/user/profile-info")
-    public ResponseEntity<?> 프로필정보(@AuthenticationPrincipal String email){
+    public ResponseEntity<?> 프로필정보(@AuthenticationPrincipal String email) {
         // 로그인한 유저정보 없음
-        if(email==null) return ResponseEntity.status(401).build();
+        if (email == null) return ResponseEntity.status(401).build();
         User user = userService.이메일로유저찾기(email);
         return ResponseEntity.ok(Map.of("name", user.getName()));
     }

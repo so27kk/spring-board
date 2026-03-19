@@ -27,8 +27,7 @@ public class UserViewController {
     public String registerView() {
         return "user/register";
     }
-
-    /*
+/*
     @PostMapping("/user/register")
     public String register(User user) {
         boolean result = userService.회원가입(user);
@@ -38,16 +37,19 @@ public class UserViewController {
             return "redirect:/user/register";  // 힌트: 실패 시 회원가입 페이지로 돌려보내기
         }
     }
-    */
+
+ */
+
     @GetMapping("/user/login")
     public String loginView() {
         return "/user/login";
     }
     /*
 
-    사용 하지 않는다 -> 로그인을 통해서 세션관리를 진행하기 위해 만들어진 Mapping
 
-    로그인이라는 작업을 하면 쿠키에 유효기간이 설정된 인증 팔찌를 이용할 것이지 때문에 사용 안함
+    사용 하지 않는다. -> 로그인을 통해서 세션관리를 진행하기 위해 만들어진 Mapping
+
+    로그인 이라는 작업을 하면 쿠키에 유효기간이 설정된 인증 팔찌를 이용할 것이기 때문에 사용 안함
     // 성공 시 메인페이지 redirect / 실패 시 로그인 페이지 redirect
     @PostMapping("/user/login")
     public String login(@RequestParam String email, HttpSession session) {
@@ -60,31 +62,19 @@ public class UserViewController {
         }
     }
      */
-    /*
-    // Todo 5 : 로그아웃 처리
-    @GetMapping("/user/logout")
-    public String 로그아웃(HttpSession session) {
-        session.invalidate();  // 힌트: 세션 전체를 초기화하는 메서드 호출
-        return "redirect:/";
-    }
 
-     */
-
-    // Todo 6 : 이메일 찾기 페이지 반환
     @GetMapping("/user/find-email")
     public String findEmailView() {
         return "user/findUser";
     }
-
-    // Todo 7 : 프로필 페이지 반환
     @GetMapping("/user/profile")
     public String profileView(@AuthenticationPrincipal String email, Model model) {
         // JWT 방식 - JwtFilter 가 등록한 이메일로 유저 조회
         User 최신유저정보 = userService.이메일로유저찾기(email);
-        model.addAttribute("user", 최신유저정보);
+        model.addAttribute("user", 최신유저정보);  // 힌트: JSP 에서 user 라는 이름으로 사용 중
         return "/user/profile";
     }
-/*
+    /*
     @GetMapping("/user/profile")
     public String profileView(HttpSession session, Model model) {
         User 임시보관된_유저정보 = (User) session.getAttribute("loginUser");  // 힌트: "loginUser"
@@ -94,7 +84,6 @@ public class UserViewController {
         return "/user/profile";
     }
 
-    // Todo 8 : 프로필 사진 업로드 처리
     @PostMapping("/user/profile/upload")
     public String 프로필사진업로드하기(@RequestParam("imageFile") MultipartFile imageFile,
                              HttpSession session, RedirectAttributes redirectAttributes) {
@@ -109,5 +98,6 @@ public class UserViewController {
         }
         return "redirect:/user/profile";
     }
-    */
+
+     */
 }

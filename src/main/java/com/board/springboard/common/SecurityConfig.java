@@ -43,18 +43,23 @@ public class SecurityConfig {
                         // 입장 팔찌 기준으로 페스티벌에 접근 가능한 사람인지 판단하겠다.
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( // 아래 주소는 로그인 토큰 없이 누구나 접근 가능한 경로
+                        /*
+                                        .requestMatchers( // 아래 주소는 로그인 토큰 없이 누구나 접근 가능한 경로
                                 "/",
-                                "user/login",
+                                "/user/login",
                                 "/user/register",
                                 "/user/check-email",
                                 "/user/send-code",
                                 "/user/verify-code",
                                 "/user/token/refresh",
                                 "/user/profile-info",
+                                "/board/**",
+                                "/product/**",
                                 "/css/**", "/js/**", "/images/**", "/uploads/**"
                         ).permitAll()
                         .anyRequest().authenticated() // 이외 나머지 주소는 로그인을 한 후 접근할 수 있다.
+                         */
+                        .anyRequest().permitAll() // 일단 모두 전체 허용
                 )
                 // Controller 에서 클라이언트의 접근이 들어오면
                 // 무조건 로그인을 해야하는 경우에는 로그인 검증 필터를 최 우선으로 실행시키겠다 환경설정

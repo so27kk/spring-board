@@ -15,9 +15,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+
 @Service
 @RequiredArgsConstructor // new 자바객체파일() 생략
 public class BoardService {
+
+
+
     // 보드 매퍼 에 작성된 기능을 활용하겠다.
     // 보드 매퍼 는 xml에서 가져온 SQL 기능을 보유하고 있는 명칭들의 집합소!
     private final BoardMapper boardMapper;
@@ -56,7 +60,7 @@ public class BoardService {
         boardMapper.게시물추가(board);
         // 2. 만약에 이미지 파일이 없으면 게시물 추가만하고, 종료
 
-        //파일의 데이터가 없거나 결함있으면 돌려보내기
+        // 파일의 데이터가 없나 또는 비어있거나 둘중 하나라도 결함이 있으면 돌려보내기~
         if (imageFiles == null || imageFiles.isEmpty()) return;
 
         // 3. 이미지가 존재한다면 저장 폴더 자동 생성
@@ -133,7 +137,7 @@ public class BoardService {
     // 게시물 삭제 유무 나중에 확인
     public void deleteBoard(int board_no) {
         boardImageMapper.이미지전체삭제(board_no); // fk 제약으로 인하여 게시물 삭제
-        // SQL FK PK 확인하기
+        // SQL FK PK 확인하기!
         boardMapper.게시물삭제(board_no);
     }
 }

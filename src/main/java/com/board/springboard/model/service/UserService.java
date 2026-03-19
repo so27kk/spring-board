@@ -22,7 +22,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;   // 비밀번호 BCrypt 검증
     private final JwtUtil jwtUtil;                   // 토큰 발급
     private final EmailCodeService emailCodeService; // 인증번호 발송
-    private final Map<String, String> 리프레시토큰보관함 = new ConcurrentHashMap<>(); // 리프레시 토큰 메모리 저장 30분 or 14일 정도
+    private final Map<String, String> 리프레시토큰보관함 = new ConcurrentHashMap<>(); // 리프레시 토큰 메모리 저장 30분 or 14일 정도 토큰
 
     /**
      * 이메일 중복 여부를 확인하는 메서드
@@ -68,7 +68,7 @@ public class UserService {
         }
         // 이메일 중복체크기능이 false 이고 이메일이 sql에 존재하지 않는게 사실이라면
         // 회원가입을 진행하고
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword())); //비밀번호 암호화여 저장
         userMapper.회원가입(user);
         return true; // sql 에 저장이 완료되었다면 회원가입 완료를 클라이언트에게 전달하겠다.
     }
@@ -82,18 +82,19 @@ public class UserService {
      * @return 조회된 User 객체 / 존재하지 않으면 null
      */
     public Map<String, String> 로그인(String email, String 입력비밀번호) {
-        User user = userMapper.로그인(email); //db에서 해당 유저의 이메일이 존재하는지 확인한다
-        // 유저 정보가 없거나 유저가 입력한 비밀번호 암호화한것 과 db에 저장된 암호화비밀번호가 같지 않다면 null을 반환
-        // 스프링에서 만든 비밀번호 맞는지 확인하는 보안 코드 로직에 의해 아래와 같이 기입해주면 확인 처리 해줄 것
-        // .matches(DB에 저장된 암호화 비밀번호, 웹사이트에서 유저가 입력한 비밀번호를 암호화 처리)
+        User user = userMapper.로그인(email); // db에서 해당 유저의 이메일이 존재하는지 확인한다.
+        // 유저 정보가 없거나 유저가입력한 비밀번호 암호화한 것 과  db 에 저장된  암호화비밀번호가  같지 않다면 null 반환
+        // 스프링에서 만든 비밀번호 맞는지 확인하는 보안 코드 로직에 의해 아래와 같이 기입해주면 확인처리 해줄 것
+        // .matches(웹사이트에서 유저가 입력한 비밀번호를 암호화 처리, DB에 저장된 암호화 비밀번호)
+        //                                       클라이언트   DB에 저장된 비밀번호
         if(user == null || !passwordEncoder.matches(입력비밀번호, user.getPassword())) return null;
         // 위 만약에서 걸리지 않으면 본인인증이 확인된 유저의 토큰 생성
         String 액세스토큰 = jwtUtil.액세스토큰만들기(email); // 30분 유효 토큰
-        String 리프레시토큰 = jwtUtil.리프레시토큰만들기(email); // 14일 유효 토큰      둘중 하나 사용해도 되며,
+        String 리프레시토큰 = jwtUtil.리프레시토큰만들기(email); // 14일 유효 토큰     둘 중 하나 사용해도 되며,
         // 개발자는 액세스토큰으로 웹사이트를 운영할 것인지 리프레시토큰으로 운영할 것인지 판단 후 둘 중 하나 사용할것
         // 크롬 = 리프레시 토큰 네이버 다음 = 액세스 토큰 형태 유효기간은 개발자와 회사에서 지정한 규정대로 설정한다.
         리프레시토큰보관함.put(email, 리프레시토큰);
-        return Map.of("accessToken", 액세스토큰, "refreshToken", 리프레시토큰);
+        return Map.of("accessToken", 액세스토큰, "refreshToken",리프레시토큰);
     }
 
 
@@ -173,13 +174,14 @@ public class UserService {
         userMapper.유저정보수정(user);
     }
 
-    public void 인증번호발송(String email){
+    public void 인증번호발송(String email) {
         emailCodeService.인증번호발송(email);
     }
-    public boolean 인증번호검증(String email, String code){
-        return emailCodeService.인증번호확인(email, code);
+    public boolean 인증번호검증(String email, String code) {
+        return  emailCodeService.인증번호확인(email, code);
     }
-    public String 토큰재발급(String 리프레시토큰){
+
+    public String 토큰재발급(String 리프레시토큰) {
         if(!jwtUtil.유효토큰인지확인하는기능(리프레시토큰)) return null;
         String email = jwtUtil.이메일가져오기(리프레시토큰);
         String stored = 리프레시토큰보관함.get(email);
@@ -187,7 +189,7 @@ public class UserService {
         return jwtUtil.액세스토큰만들기(email);
     }
 
-    public void 로그아웃(String email){
+    public void 로그아웃(String email) {
         리프레시토큰보관함.remove(email);
     }
 }
